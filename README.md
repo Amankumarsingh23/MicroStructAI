@@ -97,3 +97,38 @@ license, exact schema, archive counts and limitations. The local research audit
 covers three official-test pairs; it does not establish full-dataset or
 source-lineage independence. No training or model evaluation occurs here.
 Downloads, artificial fixtures, metadata snapshots and manifests stay out of Git.
+
+## Session 4: preprocessing laboratory
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe src\session04_preprocessing.py
+.\.venv\Scripts\python.exe src\session04_preprocessing.py --image data/raw/steel_01.png
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+Outputs: `session04_synthetic.png`, `session04_real_comparison.png` (when an image
+is supplied), and `session04_metrics.json`, all under ignored `outputs/`.
+The JSON records fixed parameters, library versions, whole-image and thin-line
+MAE, and the educational input's SHA-256. The replacement synthetic fixture uses
+seed 42, two circles, a two-pixel line, Gaussian noise (sigma 10), 2% impulse
+probability, and a separate horizontal illumination field from 0.6 to 1.2.
+The handout's generator was truncated, so its exact MAE numbers are not reproduced.
+
+Comparisons use Gaussian (5 x 5, sigma 1 pixel), median (3 x 3), CLAHE (clip limit
+2, 8 x 8 tiles), heuristic multiplicative shading correction (Gaussian estimate,
+sigma 55 pixels), and correction followed by CLAHE. Other methods are compared
+independently; this is not a selected production pipeline. The reference level
+for shading correction is the estimated field mean, with a denominator floor of 1.
+This is not a calibrated blank/dark-field correction.
+
+Only 8-bit L/RGB intensity images are accepted. Source arrays are checked for
+mutation and supplied image-file hashes are checked before/after processing.
+No mask inputs or processing are part of this lab; mask folders and the reserved
+Figshare directory are blocked. Do not tune on official-test copies elsewhere.
+Real-image comparison is qualitative, since no clean reference is available.
+Lower global MAE can still hide thin-feature damage; no segmentation improvement
+or physical measurement is claimed.
+
+Algorithm references: [OpenCV smoothing](https://docs.opencv.org/4.x/d4/d13/tutorial_py_filtering.html)
+and [OpenCV histogram equalization/CLAHE](https://docs.opencv.org/4.x/d5/daf/tutorial_py_histogram_equalization.html).
