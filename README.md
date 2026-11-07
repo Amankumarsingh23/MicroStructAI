@@ -254,3 +254,37 @@ Educational labels are unvalidated hypotheses, not verified grains or particles.
 No instance IoU is reported there or inferred from Figshare semantic class masks.
 Source preservation, 16-bit rejection and reserved-test safeguards remain active.
 Reference: [scikit-image marker-controlled watershed](https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_watershed.html).
+
+## Session 9: quantitative region measurements
+
+```powershell
+.\.venv\Scripts\python.exe src\session09_quantitative_lab.py
+.\.venv\Scripts\python.exe src\session09_quantitative_lab.py --demo-um-per-pixel 0.25
+.\.venv\Scripts\python.exe src\session09_quantitative_lab.py --image data/raw/steel_01.png
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+Creates `outputs/session09/session09_synthetic.png`, `session09_metrics.json`
+and `session09_objects.csv`; supplying an image also creates a separate
+`session09_educational_objects.csv`. No new dependencies are needed.
+
+Reports valid-ROI area fraction, equal-area circle diameter, Crofton perimeter,
+unclamped circularity, second-moment ellipse axes/aspect ratio and pixel centroids.
+Objects touching the image/ROI boundary are flagged, not silently discarded.
+ROI clipping preserves original IDs and reports disconnected observed fragments;
+their descriptors refer to the visible union, not the unknown complete object.
+Size distributions are number-weighted observations including flagged objects,
+with no claim of unbiased population statistics or ASTM compliance.
+
+The reconstructed four-object fixture uses seed 41 and a known excluded ROI.
+A 5 x 5 dilation leaves four components but raises valid-field foreground fraction
+from 9.5572% to 11.5545% (+1.9973 percentage points). JSON includes matched object
+area/diameter errors, count and semantic IoU. The package referenced in the
+handout was not attached, so exact handout fixture counts are not claimed.
+
+`--demo-um-per-pixel` applies ONLY to synthetic descriptors: length scales by s,
+area by s squared, and output fields explicitly say hypothetical. Educational
+measurements always remain in pixels even when both CLI options are supplied.
+The educational full-image ROI still includes annotations and yields unvalidated
+candidate fractions/components. Source and reserved-test safeguards remain active.
+Reference: [scikit-image regionprops](https://scikit-image.org/docs/0.26.x/api/skimage.measure.html#skimage.measure.regionprops).
