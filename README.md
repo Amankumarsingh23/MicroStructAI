@@ -358,3 +358,29 @@ Directories are created exclusively. The source package referenced by the handou
 was not attached; our reconstructed generator may produce different loss values.
 References: [PyTorch Conv2d](https://docs.pytorch.org/docs/2.15/generated/torch.nn.Conv2d.html),
 [CrossEntropyLoss](https://docs.pytorch.org/docs/2.15/generated/torch.nn.CrossEntropyLoss.html).
+
+## Session 12: small U-Net architecture
+
+```powershell
+.\.venv\Scripts\python.exe src\session12_unet_architecture.py --output-dir outputs/session12
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+Implements DoubleConv, UpBlock and SmallUNet: two pooling levels, channels 8/16/32,
+learned transposed upsampling, concatenated encoder skips and a raw-logit 1 x 1
+head. Two-class model: **29,330 parameters**. Ten-class output changes only the
+head. Minimum spatial size is 4 x 4; input is float32 `[B,1,H,W]`.
+
+Odd feature sizes are aligned to each skip with bilinear interpolation and
+`align_corners=False`; categorical targets are never resized. JSON records every
+encoder/pooling/concatenation shape, where alignment occurred, and finite gradient
+norms/parameter updates. Shapes include binary `[2,2,64,64]`, ten-class
+`[1,10,64,64]`, and odd `[1,2,65,67]` outputs.
+
+The CPU smoke test reuses Session 11's artificial Dataset and performs one SGD
+step (seed 12, learning rate .1). It writes `session12_report.json` and
+`session12_unet_smoke.png` under the requested fresh output directory; existing
+directories are refused. No new dependencies, real-image reads or model-performance
+claims. This small same-padded variant is not the exact original U-Net architecture.
+The referenced package was not attached, so actual loss values may differ from
+the handout. No full training loop or research-data experiment is introduced yet.
