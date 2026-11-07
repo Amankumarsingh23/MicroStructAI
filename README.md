@@ -41,3 +41,28 @@ from another directory. Open `outputs/steel_01_inspection.png` after running.
 
 Virtual environments, raw images, generated outputs and personal session notes
 are excluded from Git. Each session's learning notes live in `learning-notes/`.
+
+## Session 2: digital images, sampling and interpolation
+
+```powershell
+.\.venv\Scripts\python.exe src\session02_image_lab.py
+```
+
+Saves `outputs/session02_image_lab.png`: original grayscale, fixed crop,
+histogram, nearest-neighbor and Lanczos half-size images, and center-row profile.
+Prints image mode, dtype, intensity statistics and interpolation experiment results.
+Optional `--image` and `--output` arguments work as in Session 1.
+
+This exercise accepts 8-bit `L` or `RGB` inputs at least 240 rows by 360 columns.
+Higher-bit-depth inputs are rejected before conversion. The crop is
+`gray[40:240, 60:360]`, with shape `(200, 300)`; it retains original sampling.
+Resizing preserves the field of view but changes sampling. For the example's
+exact half-size resize, micrometers per pixel would double if calibration were
+verified. No physical measurements are claimed here.
+
+The synthetic categorical-mask experiment asserts that nearest neighbor retains
+IDs `{0, 2}`, while bilinear creates the invalid intermediate ID `1`. These toy
+labels are not annotations of the real micrograph. Lanczos is demonstrated for
+intensity images, where smoothing and possible ringing still require inspection.
+Histograms discard spatial arrangement; line-profile changes do not by themselves
+identify phase boundaries. Session 1 scripts and the raw image are preserved.
