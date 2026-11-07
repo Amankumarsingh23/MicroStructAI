@@ -66,3 +66,34 @@ labels are not annotations of the real micrograph. Lanczos is demonstrated for
 intensity images, where smoothing and possible ringing still require inspection.
 Histograms discard spatial arrangement; line-profile changes do not by themselves
 identify phase boundaries. Session 1 scripts and the raw image are preserved.
+
+## Session 3: dataset provenance and validation
+
+```powershell
+# Artificial deterministic pairs: 2 train, 1 test (not steel images).
+.\.venv\Scripts\python.exe src\session03_dataset_audit.py --demo
+# Inspect/download Figshare v2's 115 MB test archive and audit 3 genuine pairs.
+.\.venv\Scripts\python.exe src\session03_prepare_figshare.py
+# Controlled success/failure cases:
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+The auditor expects flat `train/images`, `train/masks`, `test/images`,
+`test/masks` folders with matching PNG filenames. Empty partitions are allowed
+for subset inspection; the dataset as a whole must contain at least one pair.
+Use `--data-root`, `--manifest`, and `--source-dataset` for a research directory;
+never use `--demo` there. The demo option is restricted to its dedicated path.
+
+Checks include image/mask mode and dtype, dimensions, IDs 0–9, missing pairs,
+unexpected files, and byte-identical images across partitions. Palette masks are
+read as indices without grayscale conversion. The CSV includes source identity,
+original split, dimensions, class IDs and separate image/mask SHA-256 digests.
+Unknown provenance remains UNKNOWN and unverified pixel scale remains blank.
+Records are sorted and CSV replacement occurs only after all checks pass.
+On failure, any previous manifest remains an earlier result and is not refreshed.
+
+See [the dataset card](data/figshare_orientation_dataset_card.md) for attribution,
+license, exact schema, archive counts and limitations. The local research audit
+covers three official-test pairs; it does not establish full-dataset or
+source-lineage independence. No training or model evaluation occurs here.
+Downloads, artificial fixtures, metadata snapshots and manifests stay out of Git.

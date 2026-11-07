@@ -6,3 +6,6 @@ outputs/*
 data/raw/*
 !data/raw/.gitkeep
 learning-notes/
+data/demo/
+data/downloads/
+data/metadata/
