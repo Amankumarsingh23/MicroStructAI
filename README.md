@@ -188,3 +188,34 @@ under shading. Adaptive mean/Gaussian score 0.631/0.446 under shading and produc
 holes and speckles. These are artificial-shape scores, not steel performance.
 The educational micrograph has no reference mask: only thresholds and candidate
 foreground fractions are reported, with no supervised score or constituent claim.
+
+## Session 7: mathematical morphology and connected components
+
+```powershell
+.\.venv\Scripts\python.exe src\session07_morphology_lab.py
+.\.venv\Scripts\python.exe src\session07_morphology_lab.py --image data/raw/steel_01.png
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+Saves synthetic and optional educational comparisons plus `session07_metrics.json`
+under `outputs/session07/`. Uses a centered 3 x 3 elliptical (cross-shaped)
+structuring element, one iteration, and OpenCV's default neutral morphology
+border behavior. Masks must be uint8 0/1; input arrays and image files are preserved.
+Kernels must be odd-sized, symmetric, binary uint8 with an active center.
+
+Computes erosion, dilation, opening, closing, and opening followed by closing.
+Closing alone is included in JSON; the six-panel figure shows the other variants
+alongside the reference. Reports IoU/Dice, signed area error and thin-line
+retention for synthetic masks, and foreground fraction/component counts for
+educational Otsu candidates. Every variant includes component areas in pixels,
+bounding boxes `(x, y, width, height)` and centroids `(x, y)` using 8-connectivity.
+A diagonal toy mask separately verifies 3 components with 4-connectivity and
+1 with 8-connectivity. Background label 0 is excluded from object counts.
+
+The reconstructed synthetic fixture (seed 23) contains a rectangle, circle and
+40-pixel single-column line, plus 120 added speckles and two missing interior
+pixels. The referenced source package was not attached, so exact handout IoUs
+are not claimed. Opening raises our IoU from 0.984174 to 0.993939 while erasing
+the entire line. A cleaner mask or fewer components is not proof of better
+metallurgical measurements. No physical calibration or verified particle/grain
+interpretation is available; official-test data remains excluded from exploration.
