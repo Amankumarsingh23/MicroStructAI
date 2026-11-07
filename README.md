@@ -156,3 +156,35 @@ refuses overwrite; choose a new filename for revisions. Optional `--seed` and
 See [evaluation protocol v1](docs/evaluation_protocol_v1.md) for labels, absent-class
 and aggregation policies, future benchmark requirements and current limitations.
 No additional dependencies or real-data split are introduced in Session 5.
+
+## Session 6: classical threshold segmentation
+
+```powershell
+.\.venv\Scripts\python.exe src\session06_threshold_lab.py
+.\.venv\Scripts\python.exe src\session06_threshold_lab.py --image data/raw/steel_01.png
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+Creates even-lighting and shaded synthetic six-panel comparisons, an optional
+educational-image comparison, and `session06_metrics.json` in `outputs/session06/`.
+Methods: fixed threshold 120, NumPy/OpenCV Otsu, adaptive mean and adaptive Gaussian
+(block size 41, C=6). All masks use 0/1, with 1 meaning candidate dark foreground.
+OpenCV inverted thresholding includes intensities equal to the threshold.
+
+The reconstructed fixture uses seed 17, a circle, ellipse and rectangle in a
+240 x 320 image, dark intensity 55, background 200, Gaussian noise sigma 4 and
+horizontal shading factors 0.55–1.25. The referenced source package was not
+attached; this reproduces the experiment design and observed failure modes,
+not exact source-package arrays. The supplied shaded montage is a visual reference,
+not raw numerical input or a supervised mask.
+
+NumPy Otsu maximizes between-class variance using cumulative histogram sums and
+chooses the first maximizing threshold. Constant images are explicitly rejected
+because no nonempty two-class partition exists. Source arrays/files are preserved;
+non-8-bit images, mask folders and reserved Figshare data are rejected.
+
+Synthetic dark-region IoU: fixed/Otsu 1.000/1.000 in even lighting; 0.669/0.388
+under shading. Adaptive mean/Gaussian score 0.631/0.446 under shading and produce
+holes and speckles. These are artificial-shape scores, not steel performance.
+The educational micrograph has no reference mask: only thresholds and candidate
+foreground fractions are reported, with no supervised score or constituent claim.
