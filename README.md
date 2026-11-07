@@ -132,3 +132,27 @@ or physical measurement is claimed.
 
 Algorithm references: [OpenCV smoothing](https://docs.opencv.org/4.x/d4/d13/tutorial_py_filtering.html)
 and [OpenCV histogram equalization/CLAHE](https://docs.opencv.org/4.x/d5/daf/tutorial_py_histogram_equalization.html).
+
+## Session 5: reproducible evaluation protocol
+
+```powershell
+.\.venv\Scripts\python.exe src\session05_protocol.py --output outputs/session05_protocol_demo.json
+# Expected failure: current genuine manifest has official-test records only.
+.\.venv\Scripts\python.exe src\session05_protocol.py --manifest outputs/session03_real_manifest.csv --output outputs/session05_real_protocol.json
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+The artificial demonstration assigns 12 groups (60 records) to 45 development
+training and 15 validation records, preserving three frozen-test placeholders.
+It verifies toy binary-mask accuracy 0.8333, pearlite IoU 0.6/Dice 0.75 and macro
+IoU 0.6889. These are arithmetic examples, not trained-model results.
+
+The strict real-data path requires official training records and supplied verified
+lineage. Unknown training groups, duplicates and known official train/test group
+or image-hash overlap are rejected. Input manifests are unchanged. JSON output
+refuses overwrite; choose a new filename for revisions. Optional `--seed` and
+`--validation-fraction` control reproducible group assignment, not independence.
+
+See [evaluation protocol v1](docs/evaluation_protocol_v1.md) for labels, absent-class
+and aggregation policies, future benchmark requirements and current limitations.
+No additional dependencies or real-data split are introduced in Session 5.
