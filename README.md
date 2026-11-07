@@ -288,3 +288,38 @@ measurements always remain in pixels even when both CLI options are supplied.
 The educational full-image ROI still includes annotations and yields unvalidated
 candidate fractions/components. Source and reserved-test safeguards remain active.
 Reference: [scikit-image regionprops](https://scikit-image.org/docs/0.26.x/api/skimage.measure.html#skimage.measure.regionprops).
+
+## Session 10: classical CV benchmark
+
+```powershell
+.\.venv\Scripts\python.exe src\session10_classical_benchmark.py
+# A repeat/revision requires a fresh output directory:
+.\.venv\Scripts\python.exe src\session10_classical_benchmark.py --output-dir outputs/session10_v1
+# Expected rejection: real manifest contains only official-test records.
+.\.venv\Scripts\python.exe src\session10_classical_benchmark.py --readiness-manifest outputs/session03_real_manifest.csv
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+Seven fixed pipelines on ten artificial scenes generate 70 CSV rows, a JSON
+scorecard and a nine-panel shaded-particle comparison. Default output directory:
+`outputs/session10/`; existing directories are rejected before any files change.
+Three source geometries stay in development (six lighting scenes); particles and
+bands stay in validation (four scenes). Lighting variants share truth and remain
+together. No research/educational images are read. Readiness mode inspects CSV
+metadata only, never promotes official tests, and requires supplied development lineage.
+
+Reports foreground scene-macro IoU/Dice, signed/absolute area-fraction error in
+percentage points, 8-connected region-count errors, thin-feature recall where
+annotated, confusion counts and worst scenes. Pooled IoU is reported separately.
+Absent thin annotations yield null, not perfect retention. Ranking uses validation
+scene-macro IoU, then absolute area error, then method name. Validation selection
+is not an unbiased final test estimate. Only one configuration per pipeline is
+compared; no parameter search or compute-performance benchmark is claimed.
+
+The referenced code package was not attached; our deterministic reconstruction
+uses 192 x 256 scenes, seeds 100–104, intensities 55/200, noise sigma 5 and shading
+0.6–1.2. Exact handout numbers are not reproduced. Fixed 120 wins this artificial
+suite (mean validation IoU 0.8848), but predicts 218 components instead of eight
+in shaded particles. Otsu+opening retains only 73.75% of annotated development
+thin-feature pixels. These are engineering results, not ferrite–pearlite accuracy.
+See [the Session 10 benchmark policy](docs/session10_artificial_benchmark.md).
