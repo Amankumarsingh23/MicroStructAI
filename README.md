@@ -323,3 +323,38 @@ suite (mean validation IoU 0.8848), but predicts 218 components instead of eight
 in shaded particles. Otsu+opening retains only 73.75% of annotated development
 thin-feature pixels. These are engineering results, not ferrite–pearlite accuracy.
 See [the Session 10 benchmark policy](docs/session10_artificial_benchmark.md).
+
+## Session 11: PyTorch tensors, logits and gradients
+
+```powershell
+# Tested CPU installation (before installing the complete requirements):
+.\.venv\Scripts\python.exe -m pip install torch==2.15.0 --index-url https://download.pytorch.org/whl/cpu
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe src\session11_pytorch_basics.py
+# Repeat with a fresh directory; existing outputs are protected:
+.\.venv\Scripts\python.exe src\session11_pytorch_basics.py --output-dir outputs/session11_v1
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+The artificial Dataset returns float32 `[1,64,64]` images scaled to 0–1 and long
+`[64,64]` class-index targets. DataLoader uses batch size 2, no shuffle and zero
+workers. TinyPixelNet is Conv2d(1,4,3,padding=1), ReLU, Conv2d(4,2,1): **50**
+parameters, logits `[2,2,64,64]`, predictions `[2,64,64]`. Raw logits go directly
+to CrossEntropyLoss; softmax is used only for the displayed probability map.
+
+The CPU lab uses model seed 17 and performs exactly one SGD update at learning
+rate 0.2. It checks finite gradients, weight changes and source-tensor preservation,
+then measures loss on the same batch. This is neither U-Net training nor a
+generalization benchmark. No file-based dataset or test imagery is accessed.
+
+`binary_from_orientation` validates original IDs 0–9 before deriving 0=ferrite
+(original 9), 1=pearlite (original 0–8), preserving the original array. The separate
+toy mask means 0=bright background and 1=artificial dark object, not material labels.
+Ten-class output is supported and tested without collapsing original semantics.
+
+Outputs: `outputs/session11/session11_tensor_lab.png` and `session11_report.json`,
+including shapes, types, gradients, updates, losses, versions and code provenance.
+Directories are created exclusively. The source package referenced by the handout
+was not attached; our reconstructed generator may produce different loss values.
+References: [PyTorch Conv2d](https://docs.pytorch.org/docs/2.15/generated/torch.nn.Conv2d.html),
+[CrossEntropyLoss](https://docs.pytorch.org/docs/2.15/generated/torch.nn.CrossEntropyLoss.html).
