@@ -219,3 +219,38 @@ are not claimed. Opening raises our IoU from 0.984174 to 0.993939 while erasing
 the entire line. A cleaner mask or fewer components is not proof of better
 metallurgical measurements. No physical calibration or verified particle/grain
 interpretation is available; official-test data remains excluded from exploration.
+
+## Session 8: boundaries, distance transforms and watershed
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe src\session08_watershed_lab.py
+.\.venv\Scripts\python.exe src\session08_watershed_lab.py --image data/raw/steel_01.png
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+Outputs under `outputs/session08/`: synthetic six-panel comparison, edge/boundary
+comparison, optional educational comparison and metrics JSON. SciPy supplies exact
+Euclidean distance transforms; scikit-image supplies peaks and marker watershed.
+The three-circle fixture uses nearest eligible center to assign overlapping
+pixels, with lower-ID tie breaking; seed 31 adds intensity noise. The referenced
+source package was not attached, so exact handout scores are not claimed.
+
+Uses `peak_local_max(min_distance=16, threshold_abs=7, exclude_border=False)` and
+watershed on negative distance with 4-neighbor flooding and separation lines.
+Binary component counts use 8-connectivity and exclude background. Distance and
+peak-height parameters are in pixels. Canny uses 40/100 thresholds after Gaussian
+preblur (5 x 5, sigma 1). Intensity edges are distinct from instance boundaries.
+
+Instance IoU uses Hungarian maximum-total-IoU matching, divided by the larger of
+truth/prediction counts so unmatched objects contribute zero. Both empty is null.
+This introductory metric is ID-invariant; it is not AP or panoptic quality.
+The synthetic fixture has 2 connected regions, 3 correct markers and 3 instances;
+removing/adding a marker gives 2/4 instances. Boundary pixels left at label zero
+reduce object areas. Unseeded components also remain zero and are reported
+separately from watershed lines. No fallback markers are silently invented.
+
+Educational labels are unvalidated hypotheses, not verified grains or particles.
+No instance IoU is reported there or inferred from Figshare semantic class masks.
+Source preservation, 16-bit rejection and reserved-test safeguards remain active.
+Reference: [scikit-image marker-controlled watershed](https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_watershed.html).
