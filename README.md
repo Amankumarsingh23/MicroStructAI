@@ -420,3 +420,42 @@ composite loss and epoch 3 with IoU 0.7930 when Dice was disabled. These results
 describe validation-selected development exercises. Audited research training
 data and verified source lineage remain prerequisites for the research benchmark.
 Checkpoints, outputs and personal learning notes stay excluded from Git.
+
+## Session 14 evaluation and uncertainty
+
+```powershell
+.\.venv\Scripts\python.exe src\session14_evaluation_lab.py --checkpoint outputs/session13_final/session13_best_state.pt --output-dir outputs/session14_v1
+# Separate constructed thin-feature diagnostic
+.\.venv\Scripts\python.exe src\session14_evaluation_lab.py --output-dir outputs/session14_thin_demo
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+Evaluates the saved Session 13 checkpoint on its four artificial validation groups
+and compares Fixed 120 and all-background predictions on the same scenes. Checks
+reproduction of saved foreground IoU and preservation of model/checkpoint state.
+Inference uses both eval mode and inference_mode.
+
+Confusion matrices use true rows and predicted columns. The metric functions
+support validated binary and ten-class labels. Reports distinguish pooled
+foreground overlap, scene-macro foreground IoU and macro-class IoU. Undefined
+class overlap is null and excluded from the applicable mean. The evaluated model
+uses two artificial classes.
+
+Boundary F1 uses an inner foreground boundary and Euclidean tolerance of 1.5
+pixels. Boundaries are extracted before ROI restriction, with pixels beside
+excluded ROI removed from boundary scoring. A five-threshold sensitivity table
+uses strict probability greater than threshold. Default 0.5 remains the reported
+checkpoint setting. Group bootstrap uses 2,000 whole-group resamples, seed 14,
+and percentile endpoints for scene-macro IoU.
+
+Outputs include `session14_per_scene.csv`, `session14_report.json`,
+`session14_comparison.png` and `session14_thin_diagnostic.png` under a fresh
+directory. Without a checkpoint, only the constructed diagnostic is generated.
+Its deleted 40-pixel line gives IoU 0.986842 and thin recall zero. The reconstructed
+evaluation matches checkpoint IoU 0.845541. Fixed 120 gives perfect overlap on
+these brightness-based artificial scenes.
+
+Four generated source groups and validation-selected weights restrict the scope
+of the bootstrap interval. Probability calibration requires separate evaluation
+from segmentation overlap. Existing output directories are protected, and the
+local checkpoints, reports and learning notes follow the repository ignore rules.
