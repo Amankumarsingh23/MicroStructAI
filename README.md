@@ -608,3 +608,31 @@ Fresh directories contain `session19_fields.csv`, `session19_report.json` and
 Seed changes affect both generated fields and grid offsets. Final verification
 uses `outputs/session19_final/`. Generated artifacts and learning notes follow
 repository ignore rules.
+
+## Session 20 spatial descriptors
+
+```powershell
+.\.venv\Scripts\python.exe src\session20_spatial_descriptors_lab.py --output-dir outputs/session20_v2 --seed 20 --repetitions 300 --cell-size 16
+.\.venv\Scripts\python.exe -m unittest discover -s tests -q
+```
+
+Integrates the supplied standalone lab and eight tests. It measures ROI-aware
+8-connected components, centroids, equivalent circular diameters, component
+density and censoring flags. Separate random, regular and clustered fixtures
+each contain 30 centers in a 15,724-pixel ROI. KD-tree nearest-neighbor summaries,
+complete-cell quadrat dispersion and 300 finite-ROI Monte Carlo draws describe
+each pattern. The null samples unique valid pixel centers conditional on count.
+
+Seed 20 mean nearest distances are 11.2464, 18.0000 and 3.5004 pixels, with
+cell-16 dispersion .7797, .5254 and 3.8983. The separate component mask contains
+four observed regions, including two boundary-censored regions. Boundary flags
+and interior-only summaries are descriptive. The nearest-neighbor edge check
+uses distances to invalid pixel centers as a raster approximation.
+
+Fresh directories contain `session20_report.json`, `session20_components.csv`,
+`session20_patterns.csv` and `session20_spatial_patterns.png`. Additional runs
+under `outputs/session20_cell8/`, `outputs/session20_cell32/` and
+`outputs/session20_seed21/` explore cell size and fixture variability.
+Committed-code verification uses `outputs/session20_final/`. Measurements use
+pixel units and artificial object definitions. Physical clustering inference
+requires validated instances, appropriate spatial nulls and specimen sampling.
