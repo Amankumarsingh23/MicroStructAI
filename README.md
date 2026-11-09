@@ -384,3 +384,39 @@ directories are refused. No new dependencies, real-image reads or model-performa
 claims. This small same-padded variant is not the exact original U-Net architecture.
 The referenced package was not attached, so actual loss values may differ from
 the handout. No full training loop or research-data experiment is introduced yet.
+
+## Session 13 training, validation and checkpoints
+
+```powershell
+.\.venv\Scripts\python.exe src\session13_training_lab.py --output-dir outputs/session13_v1 --epochs 5
+# Optional loss comparison with a fresh output directory
+.\.venv\Scripts\python.exe src\session13_training_lab.py --output-dir outputs/session13_no_dice --epochs 5 --dice-weight 0
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+Trains the Session 12 SmallUNet on 16 artificial 48 x 48 images from geometry
+groups 0–7 and validates on eight images from groups 8–11. Even/shaded views stay
+within their source group's partition. CPU execution uses seed 13, one thread,
+batch size 4, zero loader workers and Adam at learning rate 0.015.
+
+Training combines class-weighted CE and 0.25 times mean per-image foreground soft
+Dice loss. Class weights come from training labels, with foreground weight capped
+at 8. Validation records unweighted pixel-mean CE, confusion counts, pooled
+foreground IoU/Dice, scene-macro IoU and accuracy under eval/no_grad. Undefined
+foreground overlap is serialized as null.
+
+Selection maximizes pooled validation IoU, then minimizes validation CE. Exact
+ties retain the earlier epoch. The best state is saved immediately with optimizer
+state and configuration. Loading uses weights_only=True into a fresh model, and
+recomputed validation metrics are verified against the selected epoch.
+
+Each exclusive output directory contains `session13_best_state.pt`,
+`session13_report.json` and `session13_training.png`. Existing directories are
+protected. Optimizer state supports future continuation work. Exact RNG-state
+resumption requires further implementation.
+
+The reconstructed artificial fixture selected epoch 5 with IoU 0.8455 for the
+composite loss and epoch 3 with IoU 0.7930 when Dice was disabled. These results
+describe validation-selected development exercises. Audited research training
+data and verified source lineage remain prerequisites for the research benchmark.
+Checkpoints, outputs and personal learning notes stay excluded from Git.
