@@ -517,3 +517,36 @@ This educational architecture uses a small custom encoder and simplified ASPP,
 with further training and matched evaluation needed for performance comparison.
 The original DeepLabV3+ combines spatial-pyramid context with decoder refinement.
 [DeepLabV3+ paper](https://arxiv.org/abs/1802.02611)
+
+## Session 17 controlled architecture comparison
+
+```powershell
+.\.venv\Scripts\python.exe src\session17_architecture_comparison.py --output-dir outputs/session17_v3 --epochs 4 --seeds 17 18
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+Compares SmallUNet and MiniDeepLabV3Plus using the same Session 13 groups,
+training-derived normalization and class weights. Both use four epochs, batch
+size four, Adam LR .005, weighted CE plus .25 soft Dice, disabled augmentation
+and one CPU thread. Each architecture receives the same seed-specific sample
+order. The normalized dataset wrapper exposes its underlying source groups for
+evaluation. Each selected checkpoint is loaded into a fresh architecture-specific
+model and its validation metrics verified.
+
+The report includes per-scene confusion and boundary metrics, area-fraction error,
+a separate constructed thin-line probe, Fixed 120 baseline and seed summaries.
+Warmed latency uses five warmups and 15 forward passes on one normalized float32
+48 x 48 image. Parameter storage and training wall time are recorded separately.
+Peak working memory and FLOPs require additional instrumentation.
+
+A fresh directory contains `session17_report.json`, `session17_epochs.csv`,
+`session17_comparison.png` and four best-state checkpoints. Existing directories
+are protected. Completed initial results are in `outputs/session17_v2/`, and
+the committed-code verification uses `outputs/session17_final/`.
+
+Our reconstructed artificial run produced selected IoUs 0.2688/0.6540 for U-Net
+and 0.7344/0.7955 for MiniDeepLab at seeds 17/18. Fixed 120 achieved 1.0. The
+controlled budget exposes seed variation and thin-feature trade-offs. Further
+architecture-specific tuning and independent microscopy data are needed for
+broader conclusions. Generated checkpoints, reports and personal notes follow
+the repository ignore rules.

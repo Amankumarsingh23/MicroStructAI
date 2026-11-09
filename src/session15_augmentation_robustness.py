@@ -103,6 +103,10 @@ class NormalizedToyDataset(Dataset):
     def __len__(self):
         return len(self.base)
 
+    @property
+    def groups(self):
+        return self.base.groups
+
     def set_epoch(self, epoch):
         if not isinstance(epoch, int) or epoch < 0:
             raise ValueError("Epoch must be a nonnegative integer")
