@@ -662,3 +662,29 @@ Fresh output directories contain field, property, specimen and prediction CSVs,
 results are under `outputs/session21_v1/`. Committed-code verification uses
 `outputs/session21_final/`. All generated artifacts and learning notes follow
 repository ignore rules.
+
+## Session 22 measurement uncertainty and hierarchy
+
+```powershell
+.\.venv\Scripts\python.exe src\session22_uncertainty_hierarchy_lab.py --output-dir outputs/session22_v2 --seed 22 --repetitions 300 --holdout-batch B3
+.\.venv\Scripts\python.exe -m unittest discover -s tests -q
+```
+
+Integrates the supplied retry archive, reusing Session 21's pinned seed-21
+specimens and ridge implementation. Count-level binomial FP/FN perturbations
+preserve ROI and specimen hierarchy. A fixed area-only ridge model isolates
+fraction-error propagation. Separate specimen and batch bootstrap experiments
+and leave-one-batch-out evaluation explore hierarchical dependence.
+
+Default specimen-holdout MAEs are 10.1592, 4.5307 and 6.6817 artificial units
+for train mean, area-only ridge and three-feature ridge. Holding out B3 gives
+26.1190, 13.0561 and 14.3754. The two protocols use different training populations.
+The plot legend follows the selected holdout batch. An assertion verifies the
+exact standardized linear prediction-shift equation on all simulated draws.
+
+Fresh directories contain perturbed field/specimen CSVs, grouped and batch
+prediction CSVs, `session22_report.json` with both source hashes, and
+`session22_uncertainty.png`. Initial results use `outputs/session22_v1/` and
+committed-code verification uses `outputs/session22_final/`. Count perturbations
+address fraction sensitivity and omit spatial error patterns. Bootstrap spans
+and simulated prediction ranges require their recorded conditional interpretation.
