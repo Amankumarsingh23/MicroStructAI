@@ -459,3 +459,34 @@ Four generated source groups and validation-selected weights restrict the scope
 of the bootstrap interval. Probability calibration requires separate evaluation
 from segmentation overlap. Existing output directories are protected, and the
 local checkpoints, reports and learning notes follow the repository ignore rules.
+
+## Session 15 augmentation, normalization and robustness
+
+```powershell
+.\.venv\Scripts\python.exe src\session15_augmentation_robustness.py --output-dir outputs/session15_v1 --epochs 3
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+Compares two SmallUNet runs with identical initial weights, group partitions,
+loader shuffle seeds, normalization, optimizer and loss. Training groups 0–7
+supply 16 images and validation groups 8–11 supply eight. Normalization statistics
+come from unaugmented training images and are reused for every validation stress.
+
+Paired transforms use quarter-turn rotations and horizontal/vertical flips.
+Image-only changes use brightness/contrast factors 0.85–1.15 and Gaussian noise
+sigma 0–0.03 before clipping to [0,1]. Epoch-indexed seeds reproduce each sample
+transform. Original ten-class orientation semantics block geometric augmentation,
+while photometric-only transforms preserve their class IDs.
+
+Each run selects its checkpoint on nominal validation IoU and restores it before
+evaluating nominal, dim (0.5 multiplier), bright (1.3 multiplier) and noisy
+(sigma 0.08) conditions. Stress inputs are identical across models. The report
+records both initial-state hashes and confirms checkpoint restoration.
+
+A fresh output directory contains `session15_robustness.json`,
+`session15_robustness.png`, `session15_unaugmented_best_state.pt` and
+`session15_augmented_best_state.pt`. The reconstructed three-epoch exercise
+selected nominal IoU 0.7568 without augmentation and 0.9411 with augmentation.
+Both dim-condition scores were about 0.068. These results use four artificial
+validation groups and a single seed. Real-development-data preparation and
+independent acquisition-condition evaluation remain future requirements.
