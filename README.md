@@ -550,3 +550,33 @@ controlled budget exposes seed variation and thin-feature trade-offs. Further
 architecture-specific tuning and independent microscopy data are needed for
 broader conclusions. Generated checkpoints, reports and personal notes follow
 the repository ignore rules.
+
+## Session 18 transformer foundations
+
+```powershell
+.\.venv\Scripts\python.exe src\session18_segformer_foundations.py --output-dir outputs/session18_v2
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+Integrates the supplied standalone MiniSegFormer implementation and eight tests.
+The two-stage encoder uses overlapping patch embeddings, spatial-reduction
+multi-head attention, residual blocks and depthwise Mix-FFN spatial mixing.
+Two-scale pointwise projections fuse continuous features before logits are
+resized to the input dimensions. The binary model has 19,698 parameters.
+
+For a batch of two 48 x 48 images, stage-one tokens have shape [2,144,16],
+attention [2,2,144,36], stage-two tokens [2,36,32] and logits [2,2,48,48].
+Ten-class and odd-sized outputs are also checked. Seed 18 with one CPU Adam
+step at LR .002 reduces same-batch CE from .833848 to .627785.
+
+Each fresh output directory contains `session18_report.json` with shapes,
+gradients, parameter changes and source hash, plus `session18_transformer_smoke.png`.
+The probability panel precedes the optimizer update, while the prediction panel
+follows it. Initial results are under `outputs/session18_v1/` and committed-code
+verification under `outputs/session18_final/`.
+
+The standalone artificial fixture exactly matches Session 13 group zero. This
+exercise establishes architecture plumbing and gradient flow. Performance claims
+require trained models, matched evaluation and audited microscopy data. The
+attention heatmap visualizes numerical weights with no established physical
+interpretation. Learning notes and generated artifacts follow repository ignore rules.
