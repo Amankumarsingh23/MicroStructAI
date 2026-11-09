@@ -490,3 +490,30 @@ selected nominal IoU 0.7568 without augmentation and 0.9411 with augmentation.
 Both dim-condition scores were about 0.068. These results use four artificial
 validation groups and a single seed. Real-development-data preparation and
 independent acquisition-condition evaluation remain future requirements.
+
+## Session 16 dilated convolutions and MiniDeepLabV3+
+
+```powershell
+.\.venv\Scripts\python.exe src\session16_deeplab_architecture.py --output-dir outputs/session16_v1
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```
+
+Implements DepthwiseSeparableConv, MiniASPP and MiniDeepLabV3Plus with 10,642
+parameters for two classes. Encoder stride-two convolutions produce eight-channel
+low features and 32-channel high features. Five eight-channel ASPP branches use
+a 1x1 convolution, 3x3 dilation rates 1/2/3, and global pooling. Their 40-channel
+concatenation projects to 16 context channels. Four projected low-level channels
+join the upsampled context before separable decoding and the class head.
+
+Continuous features and logits use bilinear interpolation to explicit target
+sizes. Outputs include [2,2,48,48], [1,2,65,67] and [1,10,48,48]. The smoke test
+uses Session 13 artificial samples, seed 16, CPU and one Adam step at learning
+rate .005. It checks source preservation, finite gradients and weight updates.
+
+Fresh output directories contain `session16_report.json` with shape traces,
+gradient diagnostics and code provenance, plus `session16_architecture_smoke.png`.
+The written requirements were used to reconstruct the unavailable package.
+This educational architecture uses a small custom encoder and simplified ASPP,
+with further training and matched evaluation needed for performance comparison.
+The original DeepLabV3+ combines spatial-pyramid context with decoder refinement.
+[DeepLabV3+ paper](https://arxiv.org/abs/1802.02611)
