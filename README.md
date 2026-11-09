@@ -636,3 +636,29 @@ under `outputs/session20_cell8/`, `outputs/session20_cell32/` and
 Committed-code verification uses `outputs/session20_final/`. Measurements use
 pixel units and artificial object definitions. Physical clustering inference
 requires validated instances, appropriate spatial nulls and specimen sampling.
+
+## Session 21 specimen-level feature and property tables
+
+```powershell
+.\.venv\Scripts\python.exe src\session21_feature_property_lab.py --output-dir outputs/session21_v2 --seed 21
+.\.venv\Scripts\python.exe -m unittest discover -s tests -q
+```
+
+Integrates the supplied source and eight tests delivered as text files. The
+lab generates 54 artificial fields from 18 specimens across three batches.
+Validated one-to-many joins aggregate ROI counts and component measurements
+before a disjoint 12/6 specimen split. Training-only scaling precedes ridge
+regression with fixed penalty 2. Augmented least squares supports rank-deficient
+features even when the penalty is zero.
+
+Seed 21 produces validation MAE 6.6817 artificial units against a 10.1592
+training-mean baseline. A deliberately invalid repeated-ID memorizer achieves
+zero field-row error, while six grouped holdout IDs are unseen. Simulated
+responses depend on latent morphology and batch effects. Physical interpretation
+requires independently measured specimen properties and audited source lineage.
+
+Fresh output directories contain field, property, specimen and prediction CSVs,
+`session21_report.json` and `session21_feature_property.png`. Initial supplied-code
+results are under `outputs/session21_v1/`. Committed-code verification uses
+`outputs/session21_final/`. All generated artifacts and learning notes follow
+repository ignore rules.
