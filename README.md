@@ -580,3 +580,31 @@ exercise establishes architecture plumbing and gradient flow. Performance claims
 require trained models, matched evaluation and audited microscopy data. The
 attention heatmap visualizes numerical weights with no established physical
 interpretation. Learning notes and generated artifacts follow repository ignore rules.
+
+## Session 19 stereological sampling
+
+```powershell
+.\.venv\Scripts\python.exe src\session19_stereology_sampling_lab.py --output-dir outputs/session19_v2 --grid-step 12 --seed 19
+.\.venv\Scripts\python.exe -m unittest discover -s tests -q
+```
+
+Integrates the supplied standalone source and eight tests. Eight artificial
+128 x 128 fields support ROI-aware exact area fractions and systematic point
+counts with randomized offsets. Field bootstrap uses 2,000 resamples.
+Directional scans count binary interface crossings over eligible adjacent-pixel
+lengths and retain foreground chords bracketed by valid background.
+
+Seed 19 and spacing 12 produce mean exact fraction .261844 and mean point
+fraction .253003. Mean absolute field error is 1.0092 percentage points.
+Horizontal/vertical band scans yield 0/56 crossings and vertical complete
+chords of eight pixels. The illustrative field-bootstrap interval is
+[.193806,.336794]. These artificial measurements teach sampling and directional
+morphology. Material inference requires representative physical sampling,
+validated labels and verified calibration.
+
+Fresh directories contain `session19_fields.csv`, `session19_report.json` and
+`session19_sampling.png`. Experiments under `outputs/session19_grid6/`,
+`outputs/session19_grid24/` and `outputs/session19_seed20/` vary spacing and seed.
+Seed changes affect both generated fields and grid offsets. Final verification
+uses `outputs/session19_final/`. Generated artifacts and learning notes follow
+repository ignore rules.
