@@ -771,3 +771,38 @@ Fresh directories contain four CSVs, `session25_report.json` and
 with signed bias, MAE, RMSE, coverage, width and batch/prediction-bin summaries.
 Final verification uses `outputs/session25_final/`. Generated artifacts and
 learning notes follow repository ignore rules.
+
+## Session 26 development provenance audit
+
+```powershell
+.\.venv\Scripts\python.exe src\session26_provenance_audit.py --output-dir outputs/session26_v2 --seed 26
+.\.venv\Scripts\python.exe -m unittest discover -s tests -q
+```
+
+Reconstructed from the handout because the source package was unavailable
+locally. Default execution generates six artificial pairs under the output
+directory and audits four training/two validation entries. Every manifest row
+passes partition/path/schema/calibration preflight before image content is read.
+Traversal, absolute paths, protected path names, resolved escapes and reused
+paths are rejected. Audit reads external inputs and writes reports under output.
+
+External development-only mode requires both `--data-root` and `--manifest`.
+The CSV columns are `pair_id`, `split`, `image_rel`, `mask_rel`, `schema`,
+`texture_id`, `template_id`, `source_id`, `calibration_um_per_px`. Split accepts
+`train` or `val`. Schema accepts `original10` or `derived_binary`. Empty
+calibration means unavailable. Unknown lineage values remain explicitly unverified.
+Use an isolated authorized development folder with stable files during audit.
+
+The report records byte and decoded-pixel SHA-256 values for images and masks,
+labels, dimensions, intensity and derived foreground-code fraction. Cross-split
+image duplicates and shared declared source/texture/template IDs are blockers.
+Corrupt pairs and invalid masks are blockers. Missing calibration and lineage
+are warnings. An internally consistent report retains unverified source status.
+Protected copies disguised under development names require provenance review.
+
+The reconstructed fixture has train/validation means 191.0947/138.5930 intensity
+and .081055/.103271 foreground-code fractions. These differ from the handout's
+generator. Outputs include `session26_report.json`,
+`session26_domain_diagnostics.png` and the local artificial-development fixture
+with its manifest. Final verification uses `outputs/session26_final/`.
+Generated fixtures, local manifests and learning notes follow output/notes ignores.
