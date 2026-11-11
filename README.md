@@ -806,3 +806,31 @@ generator. Outputs include `session26_report.json`,
 `session26_domain_diagnostics.png` and the local artificial-development fixture
 with its manifest. Final verification uses `outputs/session26_final/`.
 Generated fixtures, local manifests and learning notes follow output/notes ignores.
+
+## Session 27 frozen benchmark protocol
+
+```powershell
+.\.venv\Scripts\python.exe src\session27_benchmark_protocol.py --output-dir outputs/session27_v2 --seed 27 --repetitions 300
+.\.venv\Scripts\python.exe -m unittest discover -s tests -q
+```
+
+Reconstructed from the handout because the source package was unavailable
+locally. Reuses Session 26 fixture generation/audit and Session 14 metrics,
+with boundary tolerance explicitly set to one pixel. Writes a canonical JSON
+protocol seal before generating data. The persisted protocol is verified before
+preflight and audit. Any protected entry or blocking audit finding prevents
+prediction. CLI execution generates its own artificial development fixture.
+
+Methods are predeclared strict intensity thresholds 120/165 and all-ferrite.
+Reports pooled confusion metrics, scene-macro IoU, boundary F1 and signed
+area-fraction error. Both-absent foreground overlap is null and excluded from
+macro aggregation. Whole declared source groups are resampled for descriptive
+bootstrap summaries, with only two validation groups.
+
+The seed-27 reconstructed fixture gives train IoU 1/1/0 and validation IoU
+1/.084810/0 for thresholds 120/165/all-ferrite. These describe the local
+generator. The six reports/CSV/plot artifacts carry protocol, manifest, source
+and dependency hashes with software versions. Final verification uses
+`outputs/session27_final/`. Runtime hashing provides change detection with
+scientific preregistration requiring separate prior evidence. The report marks
+real-data benchmarking NO-GO while source independence remains unresolved.
