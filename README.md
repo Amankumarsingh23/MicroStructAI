@@ -890,3 +890,37 @@ readiness report, per-specimen trace records and the pipeline figure. Final
 verification uses `outputs/session29_final/`. Physical calibration, verified
 real sources, reference annotations and measured material properties remain
 unresolved, so the report retains a real-material NO-GO status.
+
+## Final project review and Session 30 release audit
+
+The 30-session practical learning track implements classical and educational
+neural segmentation, image measurements, specimen regression, explainability,
+reliability and provenance safeguards. Read the [project narrative](docs/project_summary.md)
+and [research roadmap](docs/research_roadmap.md) for supported capabilities and
+remaining experimental requirements. Confirmed external theory grading remains
+1080/1100 through Session 22; later written answers require review.
+
+```powershell
+.\.venv\Scripts\python.exe src\session30_release_audit.py --session29-dir outputs/session29_final --output-dir outputs/session30_final
+.\.venv\Scripts\python.exe -m unittest discover -s tests -q
+```
+
+The independent auditor imports no Session 29 functions. It reads saved ledgers
+and recomputes 540 file hashes, label/ROI contracts, mask predictions, confusion
+counts, connected components, specimen pooling, fitting-only normalization and
+regression, conformal calibration and all nine evaluation predictions. It checks
+cross-role lineage, trace links and reported metrics. Session 29 inputs are read
+only. Audit output must be a fresh directory outside that input tree.
+
+The reconstructed final lab exports an audit JSON, claims CSV, technical summary,
+readiness figure and release manifest. The canonical SHA-256 seal identifies
+release contents without claiming an independent signer or preregistration.
+Default saved Session 29 outputs reproduce MAE 4.202506 artificial units,
+coverage 9/9 and segmentation IoUs 1.0/.933068. The auditor was reconstructed
+from the handout because its package was unavailable locally. Windows and POSIX
+relative-path formats are normalized for saved-mask links.
+
+Real-material readiness remains NO-GO pending independently verified source
+lineage, calibrated microscopy, expert reference annotations, specimen-matched
+measured properties and independent evaluation. Personal learning notes, generated
+images, simulated targets, weights and local audit outputs follow ignore rules.
