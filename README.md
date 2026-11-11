@@ -743,3 +743,31 @@ Fresh outputs contain four CSVs, `session24_report.json` and
 holdout. Those specimens appeared in previous sessions, so broader independent
 performance requires separate material data. Generated artifacts and personal
 notes follow repository ignore rules.
+
+## Session 25 calibration and reliability
+
+```powershell
+.\.venv\Scripts\python.exe src\session25_calibration_reliability_lab.py --output-dir outputs/session25_v2 --seed 25 --alpha 0.1 --per-batch 30
+.\.venv\Scripts\python.exe -m unittest discover -s tests -q
+```
+
+Reconstructed the written lab because its source package was unavailable locally.
+A standalone generator pools three artificial mask fields per specimen across
+90 specimens and three batches. Batch-stratified partitions contain 45 fitting,
+24 calibration and 21 evaluation specimens. An area-only unregularized model
+learns normalization from fitting data. Split conformal uses the explicit
+ceil((n+1)*(1-alpha)) order statistic and rejects unavailable finite ranks.
+
+The default reconstruction gives radius 12.7482, rank 23 and width 25.4964
+artificial units. Evaluation MAE is 5.6733 with coverage 21/21. Training-residual
+calibration also covers 21/21 in this realization. B3 shift uses 30 fitting and
+30 calibration specimens from B1/B2, with 30 B3 evaluation specimens. Its MAE
+is 10.1899 and coverage 9/30. These generator-specific results differ from the
+handout example. Marginal conformal validity requires exchangeability, while
+fixed batch composition and batch shift require separate interpretation.
+
+Fresh directories contain four CSVs, `session25_report.json` and
+`session25_calibration_reliability.png`. Residuals use actual minus predicted,
+with signed bias, MAE, RMSE, coverage, width and batch/prediction-bin summaries.
+Final verification uses `outputs/session25_final/`. Generated artifacts and
+learning notes follow repository ignore rules.
