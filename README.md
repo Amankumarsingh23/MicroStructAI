@@ -834,3 +834,30 @@ and dependency hashes with software versions. Final verification uses
 `outputs/session27_final/`. Runtime hashing provides change detection with
 scientific preregistration requiring separate prior evidence. The report marks
 real-data benchmarking NO-GO while source independence remains unresolved.
+
+## Session 28 paired comparison and failure analysis
+
+```powershell
+.\.venv\Scripts\python.exe src\session28_paired_failure_analysis.py --output-dir outputs/session28_v2 --seed 28 --repetitions 500
+.\.venv\Scripts\python.exe -m unittest discover -s tests -q
+```
+
+Standalone reconstruction of the written lab because its code package was
+unavailable locally. Generates 18 artificial sources, three correlated lighting
+views each, with six training-design and 12 validation sources. Both fixed
+thresholds evaluate the same images. Original-style ID 8 marks a synthetic line.
+Source-level pairing averages the three view differences before equal-source
+comparison. Whole-source bootstrap uses 500 draws. Exact sign flipping enumerates
+all 4,096 sign assignments on the 12 validation-source differences.
+
+The reconstructed default mean IoU difference (120 minus 165) is -.0934212,
+with descriptive bootstrap span [-.0982606,-.0891101] and exploratory sign-flip
+p=.00048828125. Illumination-dependent performance reversals and thin-feature
+recall are reported alongside boundary F1, signed area error and a declared
+FP/FN dominance taxonomy. Results differ from the handout's unavailable generator.
+
+Outputs include a sealed protocol, fixture manifest, per-image metrics,
+source comparisons, lighting summaries, bootstrap draws, report and figure.
+Final verification uses `outputs/session28_final/`. The report retains a
+real-material NO-GO status pending verified provenance and physical validation.
+Generated artifacts and learning notes follow repository ignore rules.
