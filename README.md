@@ -688,3 +688,30 @@ prediction CSVs, `session22_report.json` with both source hashes, and
 committed-code verification uses `outputs/session22_final/`. Count perturbations
 address fraction sensitivity and omit spatial error patterns. Bootstrap spans
 and simulated prediction ranges require their recorded conditional interpretation.
+
+## Session 23 model explainability
+
+```powershell
+.\.venv\Scripts\python.exe src\session23_explainability_lab.py --output-dir outputs/session23_v3 --seed 23 --repeats 200
+.\.venv\Scripts\python.exe -m unittest discover -s tests -q
+```
+
+Reuses Session 21's generator, seed-21 specimen split and fixed ridge penalty 2.
+Training coefficients, validation permutation importance, exact additive linear
+contributions and a correlated-proxy experiment describe the fitted predictor.
+Default permutation delta MAEs are +5.286, +.131 and -.201 artificial units for
+area fraction, component density and mean NN distance. Six held-out specimens
+retain ridge MAE 6.6817 against baseline 10.1592.
+
+Each prediction is reconstructed from the training-target mean and standardized
+feature contributions. These use a training-mean reference consistent with
+interventional linear attribution assumptions. Correlation-aware conditional
+SHAP requires a different value function. Joint proxy permutation preserves
+paired feature dependence and produces larger reliance scores in this fixture.
+
+Fresh directories contain prediction, contribution and permutation CSVs,
+`session23_report.json` and `session23_explainability.png`. The completed initial
+run uses `outputs/session23_v2/` and committed-code verification uses
+`outputs/session23_final/`. Integration corrects Windows console encoding,
+empty permutation-group validation and reconstruction-error reporting.
+Generated outputs and personal notes follow repository ignore rules.
