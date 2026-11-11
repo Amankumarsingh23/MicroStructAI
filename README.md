@@ -861,3 +861,32 @@ source comparisons, lighting summaries, bootstrap draws, report and figure.
 Final verification uses `outputs/session28_final/`. The report retains a
 real-material NO-GO status pending verified provenance and physical validation.
 Generated artifacts and learning notes follow repository ignore rules.
+
+## Session 29 end-to-end synthetic pipeline
+
+```powershell
+.\.venv\Scripts\python.exe src\session29_end_to_end_validation.py --output-dir outputs/session29_v2 --seed 29 --alpha 0.1
+.\.venv\Scripts\python.exe -m unittest discover -s tests -q
+```
+
+Standalone reconstruction of the written protocol because its package was
+unavailable locally. Generates 36 artificial specimens and 108 fields with
+18/9/9 fitting/calibration/evaluation specimen roles. Whole-manifest preflight
+checks protected paths, resolved containment and specimen/source/texture/template
+role isolation before images are read. The audit rejects decoded duplicate
+images and invalid mask/ROI pairs.
+
+Preselected threshold 120 supplies ROI-pooled fractions and observed 8-connected
+component densities. Threshold 165 supplies a segmentation comparison. Both
+prediction masks are saved and hashed. Training-only standardized area regression
+uses 18 fitting specimens, with independent nine-specimen conformal calibration.
+Default calibration rank is nine. The reconstructed run gives MAE 4.2025,
+coverage 9/9 and radius 14.1030 artificial units. Evaluation segmentation IoUs
+are 1.0 and .933068. Outcomes differ from the handout's unavailable generator.
+
+Exports protocol, input manifest, simulated property targets, field/specimen
+features, segmentation metrics, property predictions, input/output checksums,
+readiness report, per-specimen trace records and the pipeline figure. Final
+verification uses `outputs/session29_final/`. Physical calibration, verified
+real sources, reference annotations and measured material properties remain
+unresolved, so the report retains a real-material NO-GO status.
