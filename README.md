@@ -715,3 +715,31 @@ run uses `outputs/session23_v2/` and committed-code verification uses
 `outputs/session23_final/`. Integration corrects Windows console encoding,
 empty permutation-group validation and reconstruction-error reporting.
 Generated outputs and personal notes follow repository ignore rules.
+
+## Session 24 explanation and selection stability
+
+```powershell
+.\.venv\Scripts\python.exe src\session24_explanation_stability_lab.py --output-dir outputs/session24_v2 --seed 24 --subsamples 24 --bootstraps 200 --permutations 100
+.\.venv\Scripts\python.exe -m unittest discover -s tests -q
+```
+
+Reconstructed the handout protocol because its source package was unavailable
+locally. Reuses Session 21's specimen generator, outer split and least-squares
+ridge solver, plus Session 23 grouped permutation importance. All seven nonempty
+feature subsets and penalties 0/2/20 are evaluated in three inner folds using
+only the 12 outer-training specimens. Scaling is refitted inside each fold.
+
+The documented batch-stratified fold algorithm selects area fraction alone at
+penalty zero, inner MAE 6.3489 and outer development MAE 4.9764. Fixed ridge
+scores 6.6817 and the baseline 10.1592. Results differ from the handout example
+because exact fold/subsample algorithms were unavailable. Frequencies over
+24 training subsamples are 100%, 83.33% and 20.83% for fraction, density and NN.
+Two hundred stratified specimen bootstrap refits hold the selected specification
+fixed. Grouped density/NN permutation examines the fixed three-feature model.
+
+Fresh outputs contain four CSVs, `session24_report.json` and
+`session24_explanation_stability.png`. Final verification uses
+`outputs/session24_final/`. This is inner selection with one outer development
+holdout. Those specimens appeared in previous sessions, so broader independent
+performance requires separate material data. Generated artifacts and personal
+notes follow repository ignore rules.
